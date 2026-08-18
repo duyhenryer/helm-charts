@@ -93,3 +93,33 @@ topologySpreadConstraints:
       matchLabels:
         app.kubernetes.io/name: orders-api
         app.kubernetes.io/instance: orders-api
+
+# Replace these PromQL metric names and labels with the metrics exposed by the service.
+sloth:
+  enabled: true
+  service: orders-api
+  labels:
+    owner: platform
+    tier: "1"
+  slos:
+    - name: requests-availability
+      objective: 99.9
+      description: Successful HTTP request ratio for orders-api.
+      sli:
+        events:
+          errorQuery: >-
+            sum(rate(http_request_duration_seconds_count{job="orders-api",code=~"(5..|429)"}[{{.window}}]))
+          totalQuery: >-
+            sum(rate(http_request_duration_seconds_count{job="orders-api"}[{{.window}}]))
+      alerting:
+        name: OrdersApiHighErrorRate
+        labels:
+          category: availability
+        annotations:
+          summary: orders-api is consuming its availability error budget
+        pageAlert:
+          labels:
+            severity: critical
+        ticketAlert:
+          labels:
+            severity: warning

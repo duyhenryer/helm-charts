@@ -33,6 +33,13 @@ service:
   port: 80
   annotations: {}
 
+sloth:
+  enabled: false
+  annotations: {}
+  service: ""
+  labels: {}
+  slos: []
+
 httpRoute:
   enabled: false
   annotations: {}

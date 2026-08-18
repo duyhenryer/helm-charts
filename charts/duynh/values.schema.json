@@ -111,6 +111,57 @@
           "minItems": 1
         }
       }
+    },
+    "sloth": {
+      "type": "object",
+      "required": ["enabled", "annotations", "service", "labels", "slos"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "annotations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "service": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "slos": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "enabled": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "service": {
+                "minLength": 1
+              },
+              "slos": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
     }
   },
   "required": [
@@ -120,6 +171,7 @@
     "service",
     "autoscaling",
     "pdb",
-    "httpRoute"
+    "httpRoute",
+    "sloth"
   ]
 }
